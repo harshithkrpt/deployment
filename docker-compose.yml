@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres
+    container_name: todo-db
+    environment:
+      POSTGRES_DB: todo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  api:
+    build: ./todo
+    container_name: todo-api
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/todo
+      DB_USER: postgres
+      DB_PASS: ADD_PASSWORD_HERE
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  ui:
+    build: ./todo-ui
+    container_name: todo-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
